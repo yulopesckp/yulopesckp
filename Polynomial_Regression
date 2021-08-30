@@ -1,0 +1,80 @@
+import matplotlib.pyplot as plt
+import numpy as np
+
+class Polynomial:
+    def __init__(self, coefficients):
+        self.coefficients = coefficients
+        
+    def __repr__(self):
+        return "Polynomial" + str(self.coefficients)
+    
+    def __str__(self):
+        def x_expr(degree):
+            if degree == 0:
+                res = " "
+            elif degree == 1:
+                res = "x"
+            else:
+                res = "x^" + str(degree)
+            return res
+        degree = len(self.coefficients) - 1
+        res = ""
+        for i in range(0,degree+1):
+            coeff = self.coefficients[i]
+            if abs(coeff) == 1 and i < degree:
+                res += f"{'+' if coeff>0 else '-'}{x_expr(degree-i)}"
+            elif coeff != 0:
+                res += f"{coeff:+g}{x_expr(degree-i)}"
+        return res.lstrip('+')
+    
+    def __call__(self,x):
+        res = 0
+        for index, coeff in enumerate(self.coefficients[::-1]):
+            res += coeff*x**index
+        return res
+
+def pseudo_inv(m,y):
+    return np.dot(np.dot(np.linalg.inv(np.dot(m.T,m)),m.T),y)
+
+n = int(input("Insira a quantidade de valores: "))
+x = np.zeros(n)
+y = np.zeros(n)
+print("Insira os valores de x: ")
+
+for i in range(n):
+    x[i] = float(input('x['+str(i + 1)+']= '))
+print("Insira os valores de y: ")
+
+for i in range(n):
+    y[i] = float(input('y['+str(i + 1)+']= '))
+
+pltx = input("Insira o nome do eixo x: ")
+plty = input("Insira o nome do eixo y: ")
+g = int(input("Insira o grau do polinômio a ser utilizado: "))
+g = g+1
+#g = n+1
+m = np.zeros((n,g))
+coef = np.zeros((g))
+
+for i in range(n):
+    for j in range(g):
+        m[i][j] = (x[i]**j)
+
+xpoints = x
+ypoints = y
+
+plt.plot(xpoints, ypoints, 'o')
+t = np.linspace(min(x),max(x), 1000, endpoint=True)
+
+yp = Polynomial(tuple(np.flip(pseudo_inv(m,y))))
+f = Polynomial(tuple(np.flip(pseudo_inv(m,y))))
+
+yp = yp(t)
+
+plt.plot(t, yp)
+plt.ylabel(plty)
+plt.xlabel(pltx)
+title = str(input("Insira o Título do Gráfico: "))
+title = (title + ". Função: f = " +str(f))
+plt.title(title, loc='center', pad=None)
+plt.show()
