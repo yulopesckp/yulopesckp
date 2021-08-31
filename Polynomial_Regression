@@ -50,9 +50,7 @@ for i in range(n):
 
 pltx = input("Insira o nome do eixo x: ")
 plty = input("Insira o nome do eixo y: ")
-g = int(input("Insira o grau do polinômio a ser utilizado: "))
-g = g+1
-#g = n+1
+g = n+1
 m = np.zeros((n,g))
 coef = np.zeros((g))
 
@@ -75,6 +73,6 @@ plt.plot(t, yp)
 plt.ylabel(plty)
 plt.xlabel(pltx)
 title = str(input("Insira o Título do Gráfico: "))
-title = (title + ". Função: f = " +str(f))
+title = (title + ". Função: y = " +str(f))
 plt.title(title, loc='center', pad=None)
 plt.show()
